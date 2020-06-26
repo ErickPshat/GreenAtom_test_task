@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %} Review analysis {% endblock %}
+
+{% block content %}
+
+<h2>Post review for sentiment analysis</h2>
+
+<form action="{% url 'leave_review' %}" method="POST">
+
+	{% csrf_token %}
+
+	<textarea name='text' required="" placeholder='Leave your review' cols='100' rows='10'></textarea>
+	<br>
+	<button type='submit'>Post</button>
+</form>
+
+<hr>
+{% if latest_reviews_list %}
+	{% for r in latest_reviews_list%}
+		<p>
+			{{r.review_text}}
+			<br>
+			<em><font size='2'>{{r.pub_date}}</font></em>
+			<br>
+			{% if r.review_prediction < 5 %}
+				<font size='2' color='red'>Negative</font>
+			{% else %}
+				<font size='2' color='green'>Positive</font>
+			{% endif %}
+			<font size='2'>{{r.prediction_proba}} <b>{{r.review_prediction}}/10</b> {{r.review_stars}} </font>
+		</p>
+		<hr>
+	{% endfor %}
+{% else %}
+No reviews
+{% endif %}
+
+{% endblock %}
